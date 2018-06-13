@@ -249,9 +249,15 @@ class controllersiaps extends Controller
     ini_set('soap.wsdl_cache_ttl', '0');
     ini_set('default_socket_timeout', 120);
 
-     $host= $_SERVER['HTTP_HOST'];
+      if(isset($_SERVER['HTTP_HOST'])==TRUE){
+
+
+     $host=$_SERVER['HTTP_HOST'];
+      }
      //list($modulo,$dominio)=explode(".", $host);
+     if(isset($_SERVER['REQUEST_SCHEME'])==TRUE){
      $requestScheme=$_SERVER['REQUEST_SCHEME'];
+     }
      $return_='';
      //$url = $requestScheme.'://siap.'.$dominio.'/app.php/soap/interfaceliswebservice';
      //echo $url;
@@ -271,8 +277,7 @@ class controllersiaps extends Controller
         // var_dump($array_param);exit();
 
         $result = $soapClient->marcarEnvio("HOLA");
-        var_dump($result);
-        exit();
+        
         return $result;
      } catch (Exception $e) {
          return 'false';

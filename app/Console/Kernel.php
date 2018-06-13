@@ -24,9 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->call('Full\namespace\controllersiaps@responder')
-                  ->everyMinute();
-          //SCHEDULE CADA MINUTO. 
+         $schedule->call('\App\Http\Controllers\controllersiaps@marcarEnviada')
+                  ->cron('* * * * * *');
+          //SCHEDULE CADA MINUTO.
     }
 
     /**
