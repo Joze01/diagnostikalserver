@@ -35,7 +35,7 @@ Route::post('hl7/acceptMessage2','hl7controller@acceptMessage2');
 
 //EnviarRespueta a SIAPS:
 Route::post('hl7/responder','controllersiaps@responder');
-
+Route::post('hl7/marcarEnviada','controllersiaps@marcarEnviada');
 
 //servicios minsal
 Route::get('hl7/minCheckin','controllersiaps@checkin');
