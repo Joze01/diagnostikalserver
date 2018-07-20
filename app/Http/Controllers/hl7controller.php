@@ -43,6 +43,7 @@ class hl7controller extends Controller
 
         return $jsonrespuesta->checkoutResult;
     }
+
     function acceptMessage(Request $request){
         ini_set("xdebug.var_display_max_children", -1);
         ini_set("xdebug.var_display_max_data", -1);
@@ -159,6 +160,7 @@ class hl7controller extends Controller
              //return $e->__toString();
          }
     }
+
     function acceptMessageAsp($json_array){
         ini_set('soap.wsdl_cache_enabled', '0');
         ini_set('soap.wsdl_cache_ttl', '0');

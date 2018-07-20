@@ -66,7 +66,7 @@ class controllersiaps extends Controller
        $array = $arreglo;
        $json_array = json_encode($array);
        $array_param = array('json_array' => $json_array);
-       var_dump($array_param);
+       //var_dump($array_param);
        //exit();
        try {
            $soapClient = new Soapclient($url.'?wsdl', $soapParameters);
@@ -145,21 +145,34 @@ class controllersiaps extends Controller
           //var_dump($envio);
           //exit();
           $mensaje  = ($envio);
-
+          //var_dump($mensaje);
+          //exit();
           $token="1111";
+          if(is_object($mensaje)){
+          $dato = str_replace("^~\u005Cu005C&","^~\&",$mensaje->Mensaje);
+          $dato = str_replace("_z","\r",$dato);
+          $jsonChecking=json_decode($this->checkin(),true);
+          $token=$jsonChecking["token"];
+          $array = array('token'=>$token,'Mensaje'=>$dato,'Checksum'=>MD5($dato));
+          var_dump($dato);
+        }else{
           $mensaje = str_replace("^~\u005Cu005C&","^~\&",$mensaje);
           $mensaje = str_replace("_z","\r",$mensaje);
           $jsonChecking=json_decode($this->checkin(),true);
-          var_dump($jsonChecking);
-          //exit();
           $token=$jsonChecking["token"];
+          $array = array('token'=>$token,'Mensaje'=>$mensaje,'Checksum'=>MD5($mensaje));
+          var_dump($mensaje);
+        }
+
+          //exit();
+
           //var_dump($jsonChecking);
 
           //$arrayChecking = json_decode($jsonChecking);
           //var_dump($arrayChecking);
 
 
-          $array = array('token'=>$token,'Mensaje'=>$mensaje,'Checksum'=>MD5($mensaje));
+          //$array = array('token'=>$token,'Mensaje'=>$mensaje,'Checksum'=>MD5($mensaje));
 
           //var_dump($array);
         //  var_dump(json_encode($array));
@@ -232,8 +245,11 @@ class controllersiaps extends Controller
          //var_dump($array_param);exit();
 
           $result = $soapClient->generarRespuestas();
+          //$soapClient->marcarEnvio('2');
          //var_dump($array_param);exit();
          $jsonRespuestas=$result;
+         //var_dump($jsonRespuestas);
+         //exit();
         return $jsonRespuestas;
      } catch (Exception $e) {
          return 'false';
@@ -244,27 +260,24 @@ class controllersiaps extends Controller
     return $jsonRespuestas;
   }
 
-  function marcarEnviada(){
+  function marcarEnviada($id){
     ini_set('soap.wsdl_cache_enabled', '0');
     ini_set('soap.wsdl_cache_ttl', '0');
     ini_set('default_socket_timeout', 120);
 
-      if(isset($_SERVER['HTTP_HOST'])==TRUE){
-
-
-     $host=$_SERVER['HTTP_HOST'];
-      }
+     $host= $_SERVER['HTTP_HOST'];
      //list($modulo,$dominio)=explode(".", $host);
-     if(isset($_SERVER['REQUEST_SCHEME'])==TRUE){
      $requestScheme=$_SERVER['REQUEST_SCHEME'];
-     }
      $return_='';
      //$url = $requestScheme.'://siap.'.$dominio.'/app.php/soap/interfaceliswebservice';
      //echo $url;
      $url = 'http://localhost:58282/hl7Services.asmx';
-     $action = 'marcarEnvio';
+     $action = 'checkin';
      $soapParameters = array('trace' => true, 'exceptions' => true);
 
+     //$array = array('AppUser'=>$user,'Password'=>$password);
+     //$json_array = json_encode($array);
+     $array_param = array('id' => $id);
 
      try {
          $soapClient = new Soapclient($url.'?WSDL', $soapParameters);
@@ -274,16 +287,15 @@ class controllersiaps extends Controller
 
      //    $soapClient->__setLocation($requestScheme.'://siap.'.$dominio.'/app.php/soap/interfaceliswebservice');
          $soapClient->__setLocation($url);
-        // var_dump($array_param);exit();
+         //var_dump($array_param);exit();
 
-        $result = $soapClient->marcarEnvio("HOLA");
-        
+        $result = $soapClient->marcarEnvio($id);
+         //var_dump($array_param);exit();
         return $result;
      } catch (Exception $e) {
          return 'false';
          //return $e->__toString();
      }
-
   }
   /*FINAL FUNCIONES DE ENVIO DE RESPUESTA*/
 }
